@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معلوماتي</title>
+    <style>
+        body {
+            direction: rtl;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>معلوماتك الشخصية</h1>
+        <p>اسمك: <span id="user-name"></span></p>
+        <p>تاريخ الانضمام: <span id="join-date"></span></p>
+        <h2>نشاطاتك اليومية:</h2>
+        <ul id="activity-list"></ul>
+    </div>
+
+    <script>
+        // استدعاء بيانات المستخدم من البوت (مثال)
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const chatId = urlParams.get('chat_id');
+
+        fetch(`/api/user-data?chat_id=${chatId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('user-name').textContent = data.name;
+                document.getElementById('join-date').textContent = data.joinDate;
+
+                const activityList = document.getElementById('activity-list');
+                data.activities.forEach(activity => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${activity.date}: ${activity.description}`;
+                    activityList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+    </script>
+</body>
+</html>
